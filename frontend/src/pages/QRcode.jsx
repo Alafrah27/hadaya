@@ -19,7 +19,7 @@ function QRcode() {
             try {
                 const dataUrl = await toPng(qrCardRef.current, { cacheBust: true, });
                 const link = document.createElement('a');
-                link.download = `gift-${giftData?.gift?.giftCode || 'qr'}.png`;
+                link.download = `gifts-${giftData?.gift?.giftCode || 'qr'}.png`;
                 link.href = dataUrl;
                 link.click();
             } catch (err) {
