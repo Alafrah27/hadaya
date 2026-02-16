@@ -34,7 +34,7 @@ app.use("/api/v1/gift-claim", giftClaimRoutes);
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
+      console.log(`Server is running on local http://localhost:${PORT} `);
     });
   })
   .catch((error) => {
