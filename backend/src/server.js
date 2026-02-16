@@ -14,7 +14,7 @@ import { job } from "./lib/cron.js";
 job.start();
 app.use(
   cors({
-    origin: "https://hadiyatisa.netlify.app",
+    origin: "https://hadiyati-app.netlify.app/",
     credentials: true,
   }),
 );
