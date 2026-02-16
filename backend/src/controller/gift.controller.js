@@ -57,8 +57,11 @@ export const generateGiftQR = async (req, res) => {
     if (!gift) {
       return res.status(404).json({ message: "Gift not found" });
     }
-
-    const url = `${process.env.CLIENT_URL}/gifts/${gift.Slug}`;
+    const checkifindevelopment =
+      process.env.NODE_ENV === "development"
+        ? process.env.DEVELOPMENT_CLIENT_URL || "http://localhost:5173"
+        : "https://hadiyati-app.netlify.app";
+    const url = `${checkifindevelopment}/gift/${gift.Slug}`;
 
     const qrImage = await QRCode.toDataURL(url);
 

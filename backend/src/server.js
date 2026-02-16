@@ -12,9 +12,15 @@ import giftRoutes from "../src/routes/gift.route.js";
 import giftClaimRoutes from "../src/routes/giftClaim.route.js";
 import { job } from "./lib/cron.js";
 job.start();
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://hadiyati-app.netlify.app",
+  process.env.CLIENT_URL,
+  process.env.DEVELOPMENT_CLIENT_URL,
+].filter(Boolean); // Remove undefined values
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
