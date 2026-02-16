@@ -10,7 +10,8 @@ import userRoutes from "../src/routes/user.route.js";
 import giftRoutes from "../src/routes/gift.route.js";
 
 import giftClaimRoutes from "../src/routes/giftClaim.route.js";
-
+import { job } from "./lib/cron.js";
+job.start();
 app.use(
   cors({
     origin: "http://localhost:5173",

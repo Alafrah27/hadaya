@@ -58,7 +58,7 @@ export const generateGiftQR = async (req, res) => {
       return res.status(404).json({ message: "Gift not found" });
     }
 
-    const url = `${process.env.CLIENT_URL}/gift/${gift.Slug}`;
+    const url = `${process.env.CLIENT_URL}/gifts/${gift.Slug}`;
 
     const qrImage = await QRCode.toDataURL(url);
 
