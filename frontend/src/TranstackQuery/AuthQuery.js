@@ -3,14 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../lib/axios.js";
 import { toast } from "react-toastify";
 
-export const useRegister = () => {
-  const navigate = useNavigate();
-
-  return useMutation({
+export const useRegister = () => {  return useMutation({
     mutationFn: (data) => axiosInstance.post("auth/register", data),
-    onSuccess: () => {
-      navigate("/verify-email");
-    },
+
     onError: (error) => {
       console.log(error);
       toast.error(
