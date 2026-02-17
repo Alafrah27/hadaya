@@ -13,7 +13,10 @@ export const useRegister = () => {
     },
     onError: (error) => {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(
+        error?.response?.data?.message ||
+          "Registration failed. Please try again.",
+      );
     },
   });
 };
@@ -28,7 +31,9 @@ export const useLogin = () => {
     },
     onError: (error) => {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(
+        error?.response?.data?.message || "Login failed. Please try again.",
+      );
     },
   });
 };
@@ -39,7 +44,7 @@ export const useOtpCode = () => {
       await axiosInstance.post("auth/verify-otp", otpCode),
     onError: (error) => {
       console.log(error);
-      toast.error("Invalid OTP or not Matched");
+      toast.error("Invalid OTP or not Matched"); // This one was hardcoded in original
     },
   });
 };
@@ -56,7 +61,7 @@ export const useLogout = () => {
     },
     onError: (error) => {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "Logout failed");
     },
   });
 };

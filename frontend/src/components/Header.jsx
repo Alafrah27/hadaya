@@ -19,7 +19,7 @@ export default function Header() {
     console.log('Current language:', language);
     const menuRef = useRef();
     const { mutate: Logout } = useLogout()
-    const { data: User } = useGetMe()
+    const { data: userData } = useGetMe()
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -96,7 +96,7 @@ export default function Header() {
                         <Globe className='w-4 h-4' />
                     </button>
                     {
-                        !User ? (<button
+                        !userData ? (<button
                             onClick={() => navigate('/login')}
                             className=' hover:text-gray-800 bg-[#b42323] text-white px-4  rounded'
                             style={{
@@ -181,7 +181,7 @@ export default function Header() {
                     })}
                     <div className="flex flex-col w-full px-3 py-4">
                         {
-                            !User ? (<button
+                            !userData ? (<button
                                 onClick={() => navigate('/login')}
                                 className=' flex items-center gap-2 text-gray-800  px-4  hover:bg-red-50 transition"  rounded'
 
