@@ -11,11 +11,6 @@ export const createGift = async (req, res) => {
       });
     }
 
-    if (!req.user._id) {
-      return res.status(400).json({
-        message: "User not authenticated",
-      });
-    }
     // 1️⃣ Check if user already has pending gift
     const existingPendingGift = await Gifts.findOne({
       sender: req.user._id,
