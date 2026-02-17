@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLanguage } from '../context/LanguageContext'
-import { Gift } from 'lucide-react';
+import { Gift, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useLogin } from '../TranstackQuery/AuthQuery';
@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 function LoginInput() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { mutateAsync: loginUser } = useLogin();
+    const { mutateAsync: loginUser, isPending: isLoading } = useLogin();
     const navigate = useNavigate();
     const { t } = useLanguage();
     const LoginhandleSubmit = async (e) => {
@@ -82,12 +82,13 @@ function LoginInput() {
                     />
                 </div>
                 <button
+                    disabled={isLoading}
                     className='  w-full
                    text-center text-white bg-red-600 hover:bg-red-700 hover:scale-105 transition-all duration-300 rounded-2xl shadow-lg  px-4 py-5 md:py-2 
-                  mt-[20px]
+                  mt-[20px] flex items-center justify-center
                 '
                 >
-                    {t('loginButton')}
+                    {isLoading ? <Loader2 className='animate-spin' /> : t('loginButton')}
                 </button>
                 <p className='flex items-center justify-center gap-2 text-center text-gray-600'>
                     {t('dontHaveAccount')}

@@ -10,7 +10,10 @@ import { Check } from 'lucide-react';
 
 function QRcode() {
     const { id } = useParams(); // Start with ID for now, might need slug depending on flow
-    const { data: giftData, isLoading, error } = useGenerateGiftQR(id);
+    const { data: giftData, isLoading } = useGenerateGiftQR(id);
+    console.log("Gift QR data:", giftData);
+    // Debugging log to check what data is returned
+
     const { t, isRTL } = useLanguage();
     const qrCardRef = useRef(null);
 

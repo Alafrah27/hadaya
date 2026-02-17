@@ -4,10 +4,10 @@ import Gifts from "../Model/gifts.modal.js";
 export const claimGift = async (req, res) => {
   try {
     const { slug } = req.params;
-    const { FullName, phone, iban } = req.body;
+    const { name, phone, iban } = req.body;
 
     // 1️⃣ Validate input
-    if (!FullName || !phone || !iban) {
+    if (!name || !phone || !iban) {
       return res.status(400).json({
         message: "Full name, phone and IBAN are required",
       });
@@ -31,7 +31,7 @@ export const claimGift = async (req, res) => {
     const expected = gift.expectedRecipient;
 
     const isMatch =
-      expected.FullName === FullName &&
+      expected.FullName === name &&
       expected.phone === phone &&
       expected.iban === iban;
 
@@ -55,7 +55,7 @@ export const claimGift = async (req, res) => {
     // 6️⃣ Create claim
     const newClaim = new GiftClaim({
       gift: gift._id,
-      name: FullName,
+      name,
       phone,
       iban,
       isMatched: true,

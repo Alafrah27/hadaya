@@ -34,7 +34,6 @@ export const useLogin = () => {
 };
 
 export const useOtpCode = () => {
-
   return useMutation({
     mutationFn: async (otpCode) =>
       await axiosInstance.post("auth/verify-otp", otpCode),
