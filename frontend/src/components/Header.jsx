@@ -1,15 +1,16 @@
 import { Link, NavLink } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
-import { Gift, Globe, Menu, X, Home, Phone, ArrowRight, ArrowLeft, User } from 'lucide-react';
+import { Gift, Globe, Menu, X, Home, Phone, ArrowRight, ArrowLeft, User, LogOut } from 'lucide-react';
 
 import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
+import { useGetMe, useLogout } from '../TranstackQuery/AuthQuery';
 const menuItems = [
     { name: "Home", path: "/", icon: Home },
     { name: "Gifts", path: "/gifts", icon: Gift },
     { name: "Contact", path: "/contact", icon: Phone },
-    { name: "Login", path: "/login", icon: User },
+
 ];
 export default function Header() {
     const { t, toggleLanguage, language } = useLanguage();
@@ -17,6 +18,8 @@ export default function Header() {
     const navigate = useNavigate();
     console.log('Current language:', language);
     const menuRef = useRef();
+    const { mutate: Logout } = useLogout()
+    const { data: User } = useGetMe()
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -92,20 +95,39 @@ export default function Header() {
                         </span>
                         <Globe className='w-4 h-4' />
                     </button>
-                    <button
-                        onClick={() => navigate('/login')}
-                        className=' hover:text-gray-800 bg-[#b42323] text-white px-4  rounded'
-                        style={{
-                            paddingRight: "8px",
-                            paddingLeft: "8px",
-                            paddingTop: "5px",
-                            paddingBottom: "5px"
-                        }}
-                    >
-                        {t('login')}
-                    </button>
+                    {
+                        !User ? (<button
+                            onClick={() => navigate('/login')}
+                            className=' hover:text-gray-800 bg-[#b42323] text-white px-4  rounded'
+                            style={{
+                                paddingRight: "8px",
+                                paddingLeft: "8px",
+                                paddingTop: "5px",
+                                paddingBottom: "5px"
+                            }}
+                        >
+                            {t('login')}
+                        </button>) : (<button
+                            onClick={() => {
+                                Logout()
+                                navigate("/")
+                            }
+                            }
+                            className=' hover:text-gray-800 bg-[#b42323] text-white px-4  rounded'
+                            style={{
+                                paddingRight: "8px",
+                                paddingLeft: "8px",
+                                paddingTop: "5px",
+                                paddingBottom: "5px"
+                            }}
+                        >
+                            {t('logout')}
+                        </button>)
+                    }
                 </div>
                 {/* mobile menu */}
+
+
                 <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     className='block md:hidden   bg-slate-900 text-white px-4  rounded'
@@ -158,6 +180,26 @@ export default function Header() {
                         );
                     })}
                     <div className="flex flex-col w-full px-3 py-4">
+                        {
+                            !User ? (<button
+                                onClick={() => navigate('/login')}
+                                className=' flex items-center gap-2 text-gray-800  px-4  hover:bg-red-50 transition"  rounded'
+
+                            >   <User className="w-5 h-5" />
+                                {t('login')}
+                            </button>) : (<button
+                                onClick={() => {
+                                    Logout()
+                                    navigate("/")
+                                }
+                                }
+                                className='flex items-center gap-2 text-gray-700   hover:bg-red-50 transition"  px-5 py-4  rounded'
+
+                            >
+                                <LogOut className="w-5 h-5" />
+                                {t('logout')}
+                            </button>)
+                        }
                         <button
                             onClick={toggleLanguage}
                             className="flex items-center gap-5 px-4 py-3 rounded-xl text-gray-700 hover:text-red-600 hover:bg-red-50 transition">
@@ -165,13 +207,16 @@ export default function Header() {
                         </button>
 
                         {/* CTA Button */}
-                        <Link
-                            to="/send-gift"
+                        <button
+                            onClick={() => {
+                                navigate('/gifts')
+                                setIsMenuOpen(false)
+                            }}
 
                             className="mt-4 bg-red-600 text-white text-center py-3 rounded-2xl font-semibold shadow-lg hover:bg-red-700 hover:scale-105 transition-all duration-300"
                         >
                             {t('herosection_button')}
-                        </Link>
+                        </button>
                     </div>
                 </div>
             )}

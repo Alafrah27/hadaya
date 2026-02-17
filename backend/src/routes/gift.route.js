@@ -13,7 +13,7 @@ const router = express.Router();
 router.post("/create", JwtAuth, createGift);
 router.get("/my-gifts", JwtAuth, getAllMyGifts);
 router.get("/allgifts", JwtAuth, getAllGifts);
-router.get("/:slug",JwtAuth, getGiftBySlug);
 router.get("/qr/:id", generateGiftQR);
+router.get("/:slug", getGiftBySlug);
 
 export default router;

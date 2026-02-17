@@ -12,10 +12,16 @@ import giftRoutes from "../src/routes/gift.route.js";
 import giftClaimRoutes from "../src/routes/giftClaim.route.js";
 import { job } from "./lib/cron.js";
 job.start();
+const allowedOrigins = [
+  "https://hadiyati-app.netlify.app",
+  "http://localhost:5173",
+  "http://localhost:5174",
+];
 app.use(
   cors({
-    origin: "https://hadiyati-app.netlify.app/",
+    origin: allowedOrigins,
     credentials: true,
+    methods: ["POST", "PUT", "DELETE", "PUTCH"],
   }),
 );
 app.use(express.json());
@@ -31,12 +37,11 @@ app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/gift", giftRoutes);
 app.use("/api/v1/gift-claim", giftClaimRoutes);
 
-connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on local http://localhost:${PORT} `);
+app.listen(PORT, () => {
+  console.log(`Server is running on local http://localhost:${PORT} `);
+  connectDB()
+    .then(() => {})
+    .catch((error) => {
+      console.log(error);
     });
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+});

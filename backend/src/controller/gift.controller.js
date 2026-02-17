@@ -4,21 +4,54 @@ import QRCode from "qrcode";
 export const createGift = async (req, res) => {
   try {
     const { amount, expectedRecipient } = req.body;
+
     if (!amount || !expectedRecipient) {
-      return res.status(400).json({ message: "All fields required" });
+      return res.status(400).json({
+        message: "All fields are required",
+      });
     }
-    const giftCode = Math.floor(100000 + Math.random() * 900000);
+
+    if (!req.user._id) {
+      return res.status(400).json({
+        message: "User not authenticated",
+      });
+    }
+    // 1️⃣ Check if user already has pending gift
+    const existingPendingGift = await Gifts.findOne({
+      sender: req.user._id,
+    });
+
+    if (existingPendingGift && existingPendingGift.status !== "pending") {
+      return res.status(400).json({
+        message:
+          "THis git Invaild or in process, Please wait until the current gift is processed before creating a new one",
+      });
+    }
+
+    // 2️⃣ Generate secure gift code
+    const giftCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+
+    // 3️⃣ Create gift
     const gift = new Gifts({
       sender: req.user._id,
-      expectedRecipient,
+      expectedRecipient: expectedRecipient,
       amount,
-      Slug: generateSlug(),
+      Slug: generateSlug(), // correct field name
       giftCode: `Gift-${giftCode}`,
+      status: "pending",
     });
+
     await gift.save();
-    res.status(201).json(gift);
+
+    res.status(201).json({
+      message: "Gift created successfully",
+      gift,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
   }
 };
 
@@ -36,11 +69,12 @@ export const getGiftBySlug = async (req, res) => {
     }
 
     return res.status(200).json({
-      sluq: {
+      gift: {
         senderName: gift.sender.name,
         amount: gift.amount,
         message: gift.expectedRecipient.description,
         status: gift.status,
+        createdAt: gift.createdAt,
       },
     });
   } catch (error) {
@@ -57,8 +91,11 @@ export const generateGiftQR = async (req, res) => {
     if (!gift) {
       return res.status(404).json({ message: "Gift not found" });
     }
-
-    const url = `${process.env.CLIENT_URL}/gifts/${gift.Slug}`;
+    const isdevelopment =
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:5173"
+        : process.env.CLIENT_URL;
+    const url = `${isdevelopment}/gifts/${gift.Slug}`;
 
     const qrImage = await QRCode.toDataURL(url);
 
@@ -80,9 +117,14 @@ export const generateGiftQR = async (req, res) => {
 
 export const getAllMyGifts = async (req, res) => {
   try {
-    const gifts = await Gifts.find({ sender: req.user._id }).sort({
-      createdAt: -1,
-    });
+    const gifts = await Gifts.find({ sender: req.user._id })
+      .sort({
+        createdAt: -1,
+      })
+      .populate({
+        path: "sender",
+        select: "name email",
+      });
     if (!gifts) {
       return res.status(404).json({ message: "No gifts found" });
     }

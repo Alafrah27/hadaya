@@ -9,14 +9,14 @@ function HeroSection() {
     const navigate = useNavigate();
     const { data: User } = useGetMe();
     const CheckAuth = () => {
-        if (!User && !User?.isVerify) {
+        if (!User) {
             navigate('/register');
-        } else if (User && !User?.isVerify) {
-            navigate('/verify-email');
-        } else if (User && User?.isVerify) {
-            navigate('/gifts');
+            return;
         }
-    }
+
+        navigate('/gifts');
+    };
+
 
     return (
         <main className='w-full md:h-[100%] '>

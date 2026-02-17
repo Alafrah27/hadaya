@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useCreateGift } from '../TranstackQuery/GiftQuery'; // Import useCreateGift
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useGetMe } from '../TranstackQuery/AuthQuery';
 
 function Gifts() {
     const [FullName, setFullName] = useState('');
@@ -17,13 +18,14 @@ function Gifts() {
     const navigate = useNavigate();
 
     const { mutate, isPending } = useCreateGift(); // Destructure mutate and isPending
+    const { data: User } = useGetMe()
 
     const handleSubmit = (e) => {
         e.preventDefault();
         try {
             const dataform = {
                 expectedRecipient: {
-                    FullName,
+                    FullName, // Ensure key matches backend (FullName vs name) - backend modal says 'FullName'
                     phone: Phone, // Ensure key matches backend (phone vs Phone) - backend modal says 'phone'
                     iban,
                     description,
@@ -34,7 +36,10 @@ function Gifts() {
             mutate(dataform, {
                 onSuccess: (data) => {
                     // Reset form
-                    navigate(`/gifts/${data.data._id}`);
+                    console.log("Gift created successfully", data);
+                    console.log("Gift created successfully id", data?.data?.gift?._id);
+                    navigate(`/gift-qr/${data?.data?.gift?._id}`);
+                    toast.success("Gift created successfully");
                     setFullName('');
                     setPhone('');
                     setIban('');
@@ -136,7 +141,7 @@ function Gifts() {
                         {/* Form Section - Takes 7 cols on desktop */}
                         <main className="md:col-span-12 lg:col-span-7 space-y-5 relative z-10">
                             <form
-                                onSubmit={handleSubmit}
+                                onSubmit={!User ? () => navigate('/register') : handleSubmit}
                                 className="bg-white/50 backdrop-blur-sm p-6 rounded-3xl border border-white/40 shadow-sm md:p-8">
                                 <div className="space-y-5">
 
@@ -225,7 +230,7 @@ function Gifts() {
                 <div className="max-w-md mx-auto">
                     <button
                         type="submit"
-                        onClick={handleSubmit}
+                        onClick={!User ? () => navigate('/register') : handleSubmit}
                         disabled={isPending}
                         className="w-full bg-red-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:bg-red-700 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
                         {isPending ? (t('processing') || 'Processing...') : t('herosection_button')}

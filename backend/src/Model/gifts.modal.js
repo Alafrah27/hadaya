@@ -25,6 +25,8 @@ const GiftSchema = new mongoose.Schema(
       description: String,
     },
 
+  
+
     status: {
       type: String,
       enum: ["pending", "accepted", "declined", "paid"],
