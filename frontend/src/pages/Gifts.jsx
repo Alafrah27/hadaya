@@ -18,7 +18,7 @@ function Gifts() {
     const navigate = useNavigate();
 
     const { mutate, isPending } = useCreateGift(); // Destructure mutate and isPending
-    const { data: User } = useGetMe()
+    const { data: userData } = useGetMe()
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -141,7 +141,7 @@ function Gifts() {
                         {/* Form Section - Takes 7 cols on desktop */}
                         <main className="md:col-span-12 lg:col-span-7 space-y-5 relative z-10">
                             <form
-                                onSubmit={!User ? () => navigate('/register') : handleSubmit}
+                                onSubmit={!userData ? () => navigate('/register') : handleSubmit}
                                 className="bg-white/50 backdrop-blur-sm p-6 rounded-3xl border border-white/40 shadow-sm md:p-8">
                                 <div className="space-y-5">
 
@@ -230,7 +230,7 @@ function Gifts() {
                 <div className="max-w-md mx-auto">
                     <button
                         type="submit"
-                        onClick={!User ? () => navigate('/register') : handleSubmit}
+                        onClick={!userData ? () => navigate('/register') : handleSubmit}
                         disabled={isPending}
                         className="w-full bg-red-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:bg-red-700 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
                         {isPending ? (t('processing') || 'Processing...') : t('herosection_button')}
