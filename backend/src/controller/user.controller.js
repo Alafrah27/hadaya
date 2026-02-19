@@ -42,12 +42,10 @@ export const registerUser = async (req, res) => {
 
     await user.save();
 
-    // Send OTP email
-    try {
-      await MailWelcome(user.email, user.name, user.otpCode);
-    } catch (error) {
+    // Send OTP email (Non-blocking)
+    MailWelcome(user.email, user.name, user.otpCode).catch((error) => {
       console.log("Error sending email:", error);
-    }
+    });
 
     const token = await generateToken(user._id);
 
@@ -159,8 +157,38 @@ export const verifyEmail = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        isVerify: user.isVerify,
       },
     });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const resendOtp = async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.isVerify) {
+      return res.status(400).json({ message: "Email already verified" });
+    }
+
+    const otpCode = generateOTP();
+    user.otpCode = otpCode;
+    user.otpExpiry = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+
+    await user.save();
+
+    // Send OTP email (Non-blocking)
+    MailWelcome(user.email, user.name, user.otpCode).catch((error) => {
+      console.log("Error sending email:", error);
+    });
+
+    return res.status(200).json({ message: "OTP resent successfully" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
