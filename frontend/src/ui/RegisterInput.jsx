@@ -42,7 +42,7 @@ function RegisterInput() {
         <div className='w-[500px]  bg-white flex flex-col gap-4 p-4 rounded-2xl shadow-sm  mx-auto '>
             <h3 className="flex items-center justify-center gap-2 font-sans text-center font-bold text-lg leading-1 bg-gradient-to-r from-red-700 to-red-500 bg-clip-text text-transparent">
                 {t('register')}
-                <Gift className='w-8 h-8' color='red' />
+                <Gift className='w-8 h-8 text-red-600' color='red' />
             </h3>
             <form className='space-y-6' onSubmit={handleSubmit}>
                 <div className='flex flex-col gap-1'>
