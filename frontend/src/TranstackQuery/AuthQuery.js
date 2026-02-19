@@ -4,12 +4,14 @@ import axiosInstance from "../lib/axios.js";
 import { toast } from "react-toastify";
 
 export const useRegister = () => {
-   const queryClient = useQueryClient();
-    return useMutation({
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: (data) => axiosInstance.post("auth/register", data),
     onSuccess: (data) => {
-     queryClient.setQueryData(["user"], data);
-      toast.success("Registered successfully. Please check your email to verify your account.");
+      queryClient.setQueryData(["user"], data);
+      toast.success(
+        "Registered successfully. Please check your email to verify your account.",
+      );
     },
     onError: (error) => {
       console.log(error);
@@ -62,6 +64,20 @@ export const useLogout = () => {
     onError: (error) => {
       console.log(error);
       toast.error(error?.response?.data?.message || "Logout failed");
+    },
+  });
+};
+
+export const useResendOtp = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => await axiosInstance.post("auth/resend-otp"),
+    onSuccess: (data) => {
+      toast.success(data?.data?.message || "OTP resent successfully");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Failed to resend OTP");
     },
   });
 };
