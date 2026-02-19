@@ -49,7 +49,7 @@ export const registerUser = async (req, res) => {
 
     const token = await generateToken(user._id);
 
-    return res.cookie("jwt", token, {
+    res.cookie("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
@@ -98,7 +98,7 @@ export const loginUser = async (req, res) => {
 
     const token = await generateToken(user._id);
 
-    return res.cookie("jwt", token, {
+    res.cookie("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
@@ -196,7 +196,7 @@ export const resendOtp = async (req, res) => {
 
 export const logoutUser = async (req, res) => {
   try {
-    return res.clearCookie("jwt");
+    res.clearCookie("jwt");
     return res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
