@@ -6,13 +6,17 @@ dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // Use false for port 587
+  port: 465, // Use 465 for secure connection
+  secure: true,
   auth: {
-    user: process.env.EMAIL, // Your email
-    pass: process.env.PASSWORD, // Your email app password
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
   },
-  debug: true, // Add this for debugging information
+  tls: {
+    rejectUnauthorized: false, // Helps with some self-signed cert issues or proxy blocks
+  },
+  debug: true,
+  logger: true, // Enable logging
 });
 
 export const MailWelcome = async (email, name, otpCode) => {
