@@ -2,37 +2,29 @@ import React, { useState } from 'react'
 import { useLanguage } from '../context/LanguageContext'
 import { Gift, Loader2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-
-import { toast } from 'react-toastify';
 import { useRegister } from '../TranstackQuery/AuthQuery';
 
 function RegisterInput() {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const { t } = useLanguage();
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: ''
-    });
 
-    const { mutate: registerUser, isPending: isLoading } = useRegister();
+    const { mutateAsync: registerUser, isPending: isLoading } = useRegister();
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
             const formdata = {
-                name: formData.name,
-                email: formData.email,
-                password: formData.password
+                name: name.trim().toLowerCase(),
+                email: email.trim().toLowerCase(),
+                password: password
             }
             registerUser(formdata, {
                 onSuccess: () => {
-                    toast.success("Register successfully");
                     navigate("/verify-email");
                 },
 
@@ -41,7 +33,9 @@ function RegisterInput() {
             console.log(error);
         }
 
-
+        setName("");
+        setEmail("");
+        setPassword("");
     };
 
     return (
@@ -58,10 +52,9 @@ function RegisterInput() {
 
                     <input
                         type='text'
-                        name='name'
-                        id='name'
-                        value={formData.name}
-                        onChange={handleChange}
+
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                         placeholder={t('username')}
                         className='w-full h-12 px-4 py-5 md:py-2 border-2 rounded-2xl
                     outline-none border-gray-200 
@@ -79,10 +72,9 @@ function RegisterInput() {
 
                     <input
                         type='email'
-                        name='email'
-                        id='email'
-                        value={formData.email}
-                        onChange={handleChange}
+
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         placeholder={t('email')}
                         className='w-full h-12 px-4 py-5 md:py-2 border-2 rounded-2xl
                     outline-none border-gray-200 
@@ -102,8 +94,8 @@ function RegisterInput() {
                         type='password'
                         name='password'
                         id='password'
-                        value={formData.password}
-                        onChange={handleChange}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         placeholder={t('password')}
                         className='w-full h-12 px-4 py-5 md:py-2 border-2 rounded-2xl
                     outline-none border-gray-200 

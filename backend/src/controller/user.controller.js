@@ -43,18 +43,22 @@ export const registerUser = async (req, res) => {
     await user.save();
 
     // Send OTP email
-    await MailWelcome(user.email, user.name, user.otpCode);
+    try {
+      await MailWelcome(user.email, user.name, user.otpCode);
+    } catch (error) {
+      console.log("Error sending email:", error);
+    }
 
-    const token = generateToken(user._id);
+    const token = await generateToken(user._id);
 
-    res.cookie("jwt", token, {
+    return res.cookie("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "User created successfully. Please verify your email.",
       token,
       user: {
@@ -94,16 +98,16 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ message: "Invalid password" });
     }
 
-    const token = generateToken(user._id);
+    const token = await generateToken(user._id);
 
-    res.cookie("jwt", token, {
+    return res.cookie("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "User logged in successfully",
       user: {
         id: user._id,
@@ -149,7 +153,7 @@ export const verifyEmail = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Email verified successfully",
       user: {
         id: user._id,
@@ -158,24 +162,24 @@ export const verifyEmail = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
 export const logoutUser = async (req, res) => {
   try {
-    res.clearCookie("jwt");
-    res.status(200).json({ message: "User logged out successfully" });
+    return res.clearCookie("jwt");
+    return res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
 export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user).select("-password");
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
