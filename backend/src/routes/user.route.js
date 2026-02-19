@@ -15,7 +15,6 @@ const router = express.Router();
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
-router.post("/test-email", testEmail);
 router.post("/verify-otp", JwtAuth, verifyEmail);
 router.get("/me", JwtAuth, getMe);
 router.post("/resend-otp", JwtAuth, resendOtp);
