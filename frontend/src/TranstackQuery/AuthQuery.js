@@ -3,9 +3,14 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../lib/axios.js";
 import { toast } from "react-toastify";
 
-export const useRegister = () => {  return useMutation({
+export const useRegister = () => {
+   const queryClient = useQueryClient();
+    return useMutation({
     mutationFn: (data) => axiosInstance.post("auth/register", data),
-
+    onSuccess: (data) => {
+     queryClient.setQueryData(["user"], data);
+      toast.success("Registered successfully. Please check your email to verify your account.");
+    },
     onError: (error) => {
       console.log(error);
       toast.error(

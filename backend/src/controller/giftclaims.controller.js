@@ -7,9 +7,9 @@ export const claimGift = async (req, res) => {
     const { name, phone, iban } = req.body;
 
     // 1️⃣ Validate input
-    if (!name || !phone || !iban) {
+    if ( !phone) {
       return res.status(400).json({
-        message: "Full name, phone and IBAN are required",
+        message: " phone is important to claim the gift",
       });
     }
 
@@ -31,9 +31,8 @@ export const claimGift = async (req, res) => {
     const expected = gift.expectedRecipient;
 
     const isMatch =
-      expected.FullName === name &&
-      expected.phone === phone &&
-      expected.iban === iban;
+      expected.phone === phone 
+
 
     if (!isMatch) {
       return res.status(400).json({
