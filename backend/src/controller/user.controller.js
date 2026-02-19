@@ -55,7 +55,7 @@ export const registerUser = async (req, res) => {
     });
 
     res.status(201).json({
-      message: "User created successfully. Please  verify your email",
+      message: "User created successfully. Please verify your email",
       token,
       user: {
         id: user._id,
