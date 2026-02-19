@@ -238,7 +238,6 @@ export const LanguageProvider = ({ children }) => {
             claimGiftSubtitle: "أدخل بياناتك لاستلام الهدية.",
             fullName: "الاسم الكامل",
             phone: "رقم الهاتف",
-            iban: "رقم الآيبان",
             submitClaim: "استلام الهدية",
             giftClaimed: "تم استلام الهدية بنجاح!",
             giftRejected: "تم رفض الهدية.",
