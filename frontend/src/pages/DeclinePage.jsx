@@ -7,7 +7,7 @@ function DeclinePage() {
     const { t } = useLanguage();
 
     return (
-        <div className="min-h-screen bg-primary-bg flex flex-col items-center justify-center p-4 relative">
+        <div className="min-h-screen bg-primary-bg flex flex-col items-center justify-center p-3 relative">
 
             <div className="relative z-10 w-full max-w-md bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-8 text-center border border-white/50 animate-fadeIn">
 
